@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fiction.h"
+#include "../fiction/fiction.h"
 
 class ODLK {
 public:

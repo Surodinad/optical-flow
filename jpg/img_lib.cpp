@@ -2,31 +2,31 @@
 
 namespace img_lib {
 
-Image::Image(int w, int h, Color fill)
+image::image(int w, int h, color fill)
     : width_(w)
     , height_(h)
     , step_(w)
     , pixels_(step_ * height_, fill) {
 }
 
-Color* Image::GetLine(int y) {
+color* image::get_line(int y) {
     assert(y >= 0 && y < height_);
     return pixels_.data() + step_ * y;
 }
 
-const Color* Image::GetLine(int y) const {
-    return const_cast<Image*>(this)->GetLine(y);
+const color* image::get_line(int y) const {
+    return const_cast<image*>(this)->get_line(y);
 }
 
-int Image::GetWidth() const {
+int image::get_width() const {
     return width_;
 }
 
-int Image::GetHeight() const {
+int image::get_height() const {
     return height_;
 }
 
-int Image::GetStep() const {
+int image::get_step() const {
     return step_;
 }
 

@@ -39,3 +39,22 @@ size_t fiction_img::get_width() const {
 size_t fiction_img::get_height() const {
     return height;
 }
+
+fiction_lum_matrix::fiction_lum_matrix(size_t x_sz, size_t y_sz, std::initializer_list<uint8_t> values)
+: x_size_(x_sz)
+, y_size_(y_sz)
+, matrix_(y_sz)
+{
+    auto it = values.begin();
+    for (size_t y = y_size_; y > 0; --y) {
+        matrix_[y].resize(x_size_);
+        for (size_t x = 0; x < x_size_; ++x) {
+            if (it != values.end()) {
+                matrix_[y][x] = *it;
+                ++it;
+            } else {
+                matrix_[y][x] = 0;
+            }
+        }
+    }
+}

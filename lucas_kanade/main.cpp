@@ -1,40 +1,42 @@
-#include <img_lib.h>
-#include "one_dimensional/one_dimensional.h"
-
-#include <bitset>
-#include <cassert>
-#include <cstddef>
-#include <iostream>
-#include <utility>
-
-void run_fiction_one_dimensional() {
-    fiction_rgb fill{static_cast<std::byte>(0),
-                    static_cast<std::byte>(0),
-                    static_cast<std::byte>(0)};
-
-    fiction_img first_img(20, 1, fill);
-    fiction_img second_img(20, 1, fill);
-
-    for (size_t d = 13, i = 2, c = 1; i < 13; ++i, ++c) {
-        size_t dc = d * c;
-        first_img.pixels[i].r = static_cast<std::byte>(static_cast<size_t>(first_img.pixels[i].r) - dc);
-        first_img.pixels[i].g = static_cast<std::byte>(static_cast<size_t>(first_img.pixels[i].g) - dc);
-        first_img.pixels[i].b = static_cast<std::byte>(static_cast<size_t>(first_img.pixels[i].b) - dc);
-
-        std::cout << "lum=" << first_img.pixels[i].lum() << std::endl;
-    }
-
-    for (size_t d = 13, i = 7, c = 1; i < 18; ++i, ++c) {
-        size_t dc = d * c;
-        second_img.pixels[i].r = static_cast<std::byte>(static_cast<size_t>(second_img.pixels[i].r) - dc);
-        second_img.pixels[i].g = static_cast<std::byte>(static_cast<size_t>(second_img.pixels[i].g) - dc);
-        second_img.pixels[i].b = static_cast<std::byte>(static_cast<size_t>(second_img.pixels[i].b) - dc);
-    }
-
-    
-}
+#include "two_dimensional/two_dimensional.h"
 
 int main() {
-    run_fiction_one_dimensional();
+    std::vector<std::vector<uint8_t>> img1 = {
+        {100, 102, 101},
+        {98, 100, 99},
+        {97, 98, 96}
+    };
+
+    std::vector<std::vector<uint8_t>> img2 = {
+        {101, 103, 102},
+        {99, 101, 100},
+        {98, 99, 97}
+    };
+
+    int width = img1[0].size();
+    int height = img1.size();
+
+    std::vector<std::vector<double>> u(height, std::vector<double>(width));
+    std::vector<std::vector<double>> v(height, std::vector<double>(width));
+
+    TDLK tdlk;
+    tdlk.find_tdlk(img1, img2, u, v);
+
+    std::cout << "Optical flow (u):" << std::endl;
+    for (const auto& row : u) {
+        for (const auto& val : row) {
+            std::cout << val << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    std::cout << "Optical flow (v):" << std::endl;
+    for (const auto& row : v) {
+        for (const auto& val : row) {
+            std::cout << val << " ";
+        }
+        std::cout << std::endl;
+    }
+
     return 0;
 }

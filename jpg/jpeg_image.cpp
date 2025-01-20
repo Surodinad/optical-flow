@@ -26,9 +26,9 @@ namespace img_lib {
 }
 
 
-void LoadScanlineFromImage(JSAMPLE* row, int y, const Image& in_image) {
-    const Color* line = in_image.GetLine(y);
-    for (int x = 0; x < in_image.GetWidth(); ++x) {
+void load_scanline_from_image(JSAMPLE* row, int y, const image& in_image) {
+    const color* line = in_image.get_line(y);
+    for (int x = 0; x < in_image.get_width(); ++x) {
         JSAMPLE* pixel = row + x * 3;
 		pixel[0] = static_cast<JSAMPLE>(line[x].r);
 		pixel[1] = static_cast<JSAMPLE>(line[x].g);
@@ -36,11 +36,11 @@ void LoadScanlineFromImage(JSAMPLE* row, int y, const Image& in_image) {
     }
 }
 
-bool SaveJPEG(const Path& file, const Image& image) {
+bool save_JPEG(const path& file, const image& image) {
     jpeg_compress_struct cinfo;
     jpeg_error_mgr jerr;
     FILE * outfile;
-    std::vector<JSAMPLE> image_buffer(image.GetHeight()*image.GetWidth()*3, 0);
+    std::vector<JSAMPLE> image_buffer(image.get_height()*image.get_width()*3, 0);
 	JSAMPROW row_pointer[1];
     int row_stride;
     cinfo.err = jpeg_std_error(&jerr);
@@ -55,20 +55,20 @@ bool SaveJPEG(const Path& file, const Image& image) {
     }
     jpeg_stdio_dest(&cinfo, outfile);
 
-    cinfo.image_width = image.GetWidth();
-    cinfo.image_height = image.GetHeight();
+    cinfo.image_width = image.get_width();
+    cinfo.image_height = image.get_height();
     cinfo.input_components = 3;
     cinfo.in_color_space = JCS_RGB;   
     jpeg_set_defaults(&cinfo);
     
     jpeg_start_compress(&cinfo, TRUE);
 
-    row_stride = image.GetWidth() * 3;
+    row_stride = image.get_width() * 3;
 
     while (cinfo.next_scanline < cinfo.image_height) {
 		int y = cinfo.next_scanline;
         row_pointer[0] = &image_buffer[cinfo.next_scanline*row_stride];
-		LoadScanlineFromImage(row_pointer[0], y, image);
+		load_scanline_from_image(row_pointer[0], y, image);
         (void) jpeg_write_scanlines(&cinfo, row_pointer, 1);
     }
 
@@ -79,15 +79,15 @@ bool SaveJPEG(const Path& file, const Image& image) {
 	return true;
 }
 
-void SaveScanlineToImage(const JSAMPLE* row, int y, Image& out_image) {
-    Color* line = out_image.GetLine(y);
-    for (int x = 0; x < out_image.GetWidth(); ++x) {
+void save_scanline_to_image(const JSAMPLE* row, int y, image& out_image) {
+    color* line = out_image.get_line(y);
+    for (int x = 0; x < out_image.get_width(); ++x) {
         const JSAMPLE* pixel = row + x * 3;
-        line[x] = Color{byte{pixel[0]}, byte{pixel[1]}, byte{pixel[2]}, byte{255}};
+        line[x] = color{byte{pixel[0]}, byte{pixel[1]}, byte{pixel[2]}, byte{255}};
     }
 }
 
-Image LoadJPEG(const Path& file) {
+image load_JPEG(const path& file) {
     jpeg_decompress_struct cinfo;
     my_error_mgr jerr;
 
@@ -128,13 +128,13 @@ Image LoadJPEG(const Path& file) {
     buffer = (*cinfo.mem->alloc_sarray)
             ((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
 
-    Image result(cinfo.output_width, cinfo.output_height, Color::Black());
+    image result(cinfo.output_width, cinfo.output_height, color::black());
 
     while (cinfo.output_scanline < cinfo.output_height) {
         int y = cinfo.output_scanline;
         (void) jpeg_read_scanlines(&cinfo, buffer, 1);
 
-        SaveScanlineToImage(buffer[0], y, result);
+        save_scanline_to_image(buffer[0], y, result);
     }
 
     (void) jpeg_finish_decompress(&cinfo);
@@ -145,4 +145,4 @@ Image LoadJPEG(const Path& file) {
     return result;
 }
 
-} // of namespace img_lib
+} // namespace img_lib

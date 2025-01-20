@@ -7,43 +7,43 @@
 
 namespace img_lib {
 
-struct Size {
+struct size {
     int width;
     int height;
 };
 
-struct Color {
-    static Color Black() {
+struct color {
+    static color black() {
         return {std::byte{0}, std::byte{0}, std::byte{0}, std::byte{255}};
     }
 
     std::byte r, g, b, a;
 };
 
-class Image {
+class image {
 public:
-    Image() = default;
+    image() = default;
 
-    Image(int w, int h, Color fill);
+    image(int w, int h, color fill);
 
-    Color GetPixel(int x, int y) const {
-        return const_cast<Image*>(this)->GetPixel(x, y);
+    color get_pixel(int x, int y) const {
+        return const_cast<image*>(this)->get_pixel(x, y);
     }
-    Color& GetPixel(int x, int y) {
-        assert(x < GetWidth() && y < GetHeight() && x >= 0 && y >= 0);
-        return GetLine(y)[x];
+    color& get_pixel(int x, int y) {
+        assert(x < get_width() && y < get_height() && x >= 0 && y >= 0);
+        return get_line(y)[x];
     }
 
-    Color* GetLine(int y);
-    const Color* GetLine(int y) const;
+    color* get_line(int y);
+    const color* get_line(int y) const;
 
-    int GetWidth() const;
-    int GetHeight() const;
+    int get_width() const;
+    int get_height() const;
 
-    int GetStep() const;
+    int get_step() const;
 
     explicit operator bool() const {
-        return GetWidth() > 0 && GetHeight() > 0;
+        return get_width() > 0 && get_height() > 0;
     }
 
     bool operator!() const {
@@ -55,7 +55,7 @@ private:
     int height_ = 0;
     int step_;
 
-    std::vector<Color> pixels_;
+    std::vector<color> pixels_;
 };
 
 }  // namespace img_lib

@@ -3,6 +3,11 @@ project(lk)
 
 add_subdirectory(../jpg ImgLibBuildDir)
 
-add_executable(lk main.cpp one_dimensional/one_dimensional.cpp one_dimensional/fiction.cpp)
+add_executable(lk main.cpp
+                  one_dimensional/one_dimensional.cpp
+                  fiction/fiction.cpp
+                  two_dimensional/two_dimensional.cpp
+)
+
 target_include_directories(lk PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../jpg")
 target_link_libraries(lk ImgLib ${SYSTEM_LIBS})

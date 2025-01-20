@@ -4,9 +4,9 @@
 #include <filesystem>
 
 namespace img_lib {
-using Path = std::filesystem::path;
+using path = std::filesystem::path;
 
-bool SaveJPEG(const Path& file, const Image& image);
-Image LoadJPEG(const Path& file);
+bool save_JPEG(const path& file, const image& image);
+image load_JPEG(const path& file);
 
-} // of namespace img_lib
+} // namespace img_lib

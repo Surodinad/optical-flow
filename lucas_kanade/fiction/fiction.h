@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <cstddef>
 #include <vector>
 
@@ -30,4 +31,15 @@ public:
     size_t height;
 
     std::vector<fiction_rgb> pixels;
+};
+
+// TODO element access
+class fiction_lum_matrix {
+public:
+    fiction_lum_matrix(size_t x_sz, size_t y_sz, std::initializer_list<uint8_t>);
+
+private:
+    size_t x_size_;
+    size_t y_size_;
+    std::vector<std::vector<uint8_t>> matrix_;
 };
